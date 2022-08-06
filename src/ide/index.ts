@@ -40,6 +40,10 @@ class AGGridWebpackWidget extends TWComposerWidget {
 
     @property('NUMBER', defaultValue(200)) height: number;
 
+    @description('Debug Mode for extended Console Logging.')
+    @property('BOOLEAN')
+    DebugMode: boolean;
+
     @description(
         'The (eventually) edited JSON object containing full configuration (data and settings)',
     )

@@ -2,17 +2,17 @@ import { Grid } from 'ag-grid-community';
 
 import 'ag-grid-community/styles//ag-grid.css';
 import 'ag-grid-community/styles//ag-theme-alpine.css';
-import { listeners } from 'process';
 import { CheckboxRenderer } from './renderers/checkboxRenderer';
 
 export interface GridListener {
     columnMoved(column: string, toIndex: number): void;
+    cellValueChanged(oldValue: any, newValue: any): void;
 }
 
 export class TwxAgGrid {
     gridListeners: GridListener[] = [];
 
-    initAGGrid(uid: string, config: any, debugMode: boolean) {
+    initAGGrid(uid: string, config: any, debugMode: boolean): void {
         const gridListeners = this.gridListeners;
         let agg: any;
 
@@ -32,19 +32,14 @@ export class TwxAgGrid {
             checkboxRenderer: CheckboxRenderer,
         };
 
-        config.onCellValueChanged = function (event) {
-            //        hot.validateCells(valid => thisWidget.setProperty("isDataValid", valid));
-            //   thisWidget.setProperty('data', agg.gridOptions.rowData);
-
+        config.onCellValueChanged = function (event): void {
             if (typeof event.newValue !== 'undefined' && event.oldValue !== event.newValue) {
                 event.data.isEdited = true;
                 event.api.refreshCells();
+                for (const listener of gridListeners) {
+                    listener.cellValueChanged(event.oldValue, event.newValue);
+                }
             }
-
-            if (debugMode) {
-                console.log('AGGrid - Data changed');
-            }
-            // thisWidget.jqElement.triggerHandler('DataChanged');
         };
 
         config.onColumnPinned = function (event) {
@@ -84,7 +79,7 @@ export class TwxAgGrid {
 
         let movingColumn = false;
 
-        config.onColumnMoved = function (event) {
+        config.onColumnMoved = function (event): void {
             if (debugMode) {
                 console.log('AGGrid - Column Moved');
             }

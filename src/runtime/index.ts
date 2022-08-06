@@ -1,4 +1,4 @@
-import { TwxAgGrid, GridListener } from '../common/aggridTwxWrapper';
+import { TwxAgGrid } from '../common/twxAgGrid';
 
 import {
     TWWidgetDefinition,
@@ -28,14 +28,18 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
      */
     // @event clicked: TWEvent;
     // EVENTS
+    @property DebugMode;
+
     @event ColumnMoved: TWEvent;
-
-    // this.twxAgGrid.addListener(this);
-
     columnMoved(column, toIndex): void {
-        // this.setProperty('Code', code);
-        console.log(`column ${column} moved to ${toIndex}`);
+        if (this.DebugMode) console.log(`Column ${column} moved to ${toIndex}`);
         this.ColumnMoved();
+    }
+
+    @event CellValueChanged: TWEvent;
+    cellValueChanged(oldValue, newValue): void {
+        if (this.DebugMode) console.log(`Column Value changed from ${oldValue} to ${newValue}`);
+        this.CellValueChanged();
     }
     /**
      * The `@property` decorator can be applied to class member to mark them as events.
