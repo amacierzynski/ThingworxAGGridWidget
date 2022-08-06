@@ -11,10 +11,10 @@ export interface GridListener {
 
 export class TwxAgGrid {
     gridListeners: GridListener[] = [];
+    agg: any;
 
     initAGGrid(uid: string, config: any, debugMode: boolean): void {
         const gridListeners = this.gridListeners;
-        let agg: any;
 
         if (debugMode) {
             console.log('AGGrid - Data inited');
@@ -47,15 +47,8 @@ export class TwxAgGrid {
                 console.log('AGGrid - Column Pinned');
             }
 
-            // const config = thisWidget.getProperty('config');
             config.columnDefs.find((row) => row.field === event.columns[0].colDef.field).pinned =
                 event.columns[0].pinned;
-
-            // thisWidget.setProperty('pinnedColumn', event.columns[0].colDef.field);
-            // thisWidget.setProperty('pinnedOption', event.columns[0].pinned);
-            // thisWidget.setProperty('config', config);
-
-            // thisWidget.jqElement.triggerHandler('ColumnPinned');
         };
 
         config.onColumnVisible = function (event) {
@@ -64,20 +57,13 @@ export class TwxAgGrid {
             }
 
             const visibilityColumns = {};
-            // const config = thisWidget.getProperty('config');
             for (let index = 0; index < event.columns.length; index++) {
                 visibilityColumns[event.columns[index].colDef.field] = event.columns[index].visible;
                 config.columnDefs.find(
                     (row) => row.field === event.columns[index].colDef.field,
                 ).hide = !event.columns[index].visible;
             }
-
-            // thisWidget.setProperty('visibilityColumns', visibilityColumns);
-            // thisWidget.setProperty('config', config);
-            // thisWidget.jqElement.triggerHandler('ColumnVisibilityChanged');
         };
-
-        let movingColumn = false;
 
         config.onColumnMoved = function (event): void {
             if (debugMode) {
@@ -87,25 +73,16 @@ export class TwxAgGrid {
             for (const listener of gridListeners) {
                 listener.columnMoved(event.columns[0].colDef.field, event.toIndex);
             }
-
-            this.movingColumn = true;
         };
 
         config.onDragStopped = function (event) {
-            // if (movingColumn) {
-            // thisWidget.jqElement.triggerHandler('ColumnMoved');
-            // }
-
-            movingColumn = false;
+            // TODO: implement
         };
 
         config.onSelectionChanged = function (event) {
             if (debugMode) {
                 console.log('AGGrid - Row Selected');
             }
-
-            // thisWidget.setProperty('selectedRows', agg.gridOptions.api.getSelectedRows());
-            // thisWidget.jqElement.triggerHandler('RowSelected');
         };
 
         config.onColumnRowGroupChanged = function (event) {
@@ -124,26 +101,10 @@ export class TwxAgGrid {
                 ).rowGroup = true;
             }
 
-            agg.gridOptions.api.refreshCells();
-
-            // thisWidget.setProperty('groupedColumns', groupedColumns);
-            // thisWidget.setProperty('config', config);
-
-            // thisWidget.jqElement.triggerHandler('RowGroupChanged');
+            this.agg.gridOptions.api.refreshCells();
         };
 
-        // if (typeof config.getRowNodeId === "string") {
-        //   config.getRowNodeId = new Function("data", config.getRowNodeId);
-        // }
-
-        // const cellClassRules = {
-        //     'aggrid-edited': (params) =>
-        //         editedCells[params.node.id] && editedCells[params.node.id][params.colDef.field],
-        // };
-
         for (let index = 0; index < config.columnDefs.length; index++) {
-            // config.columnDefs[index].cellClassRules = cellClassRules;
-
             if (typeof config.columnDefs[index].editable === 'string') {
                 config.columnDefs[index].editable = new Function(
                     'params',
@@ -181,11 +142,16 @@ export class TwxAgGrid {
 
         $(container).empty();
 
-        // removing . from class name
         const child = <HTMLElement>document.getElementsByClassName(container.substring(1))[0];
-        agg = new Grid(child, config);
-        // agg.setAutoSize()
-        // return agg;
+        this.agg = new Grid(child, config);
+    }
+
+    getSelectedRows(): any[] {
+        throw new Error('Method not implemented.');
+    }
+
+    deselectAll(): void {
+        this.agg.gridOptions.api.deselectAll();
     }
 
     /**

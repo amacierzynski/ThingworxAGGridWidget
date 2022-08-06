@@ -2,9 +2,10 @@ import { TwxAgGrid } from '../common/twxAgGrid';
 
 import {
     TWWidgetDefinition,
-    property,
     TWEvent,
+    property,
     event,
+    service,
 } from 'typescriptwebpacksupport/widgetRuntimeSupport';
 
 import './runtime.css';
@@ -41,6 +42,24 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
     }
 
     /**
+     * The `@service` decorator can be applied to methods to mark them as thingworx services.
+     *
+     * The runtime will also automatically call the method when the associated service is invoked.
+     *
+     * Optionally, the decorator can receive the name of the service as its parameter; if it is not specified,
+     * the name of the service will be considered to be the same as the name of the method.
+     */
+    @service DeselectAll(): void {
+        if (this.DebugMode) console.log(`All data deselected.`);
+        this.twxAgGrid.deselectAll();
+    }
+
+    @service GetSelectedRows(): any {
+        this.twxAgGrid.getSelectedRows();
+        if (this.DebugMode) console.log(`Selected row number`);
+    }
+
+    /**
      * The `@event` decorator can be applied to class member to mark them as events.
      * They must have the `TWEvent` type and can be invoked to trigger the associated event.
      *
@@ -49,16 +68,20 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
      */
 
     @event ColumnMoved: TWEvent;
+
     columnMoved(column, toIndex): void {
         if (this.DebugMode) console.log(`Column ${column} moved to ${toIndex}`);
         this.ColumnMoved();
     }
 
     @event CellValueChanged: TWEvent;
+
     cellValueChanged(oldValue, newValue): void {
         if (this.DebugMode) console.log(`Column Value changed from ${oldValue} to ${newValue}`);
         this.CellValueChanged();
     }
+
+    
     /**
      * The `canBind` and `didBind` aspects can be used to specify callback methods to execute when the value of
      * the property is about to be updated or has been updated because of a binding.
@@ -104,17 +127,7 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
         $(`.widget-aggrid-container-${uid}`).addClass('ag-theme-alpine');
     }
 
-    /**
-     * The `@service` decorator can be applied to methods to mark them as events.
-     *
-     * The runtime will also automatically call the method when the associated service is invoked.
-     *
-     * Optionally, the decorator can receive the name of the service as its parameter; if it is not specified,
-     * the name of the service will be considered to be the same as the name of the method.
-     */
-    // @service testService(): void {
-    //     alert(this.clickMessage);
-    // }
+
 
     /**
      * Invoked when this widget is destroyed. This method should be used to clean up any resources created by the widget

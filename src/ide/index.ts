@@ -35,6 +35,9 @@ class AGGridWebpackWidget extends TWComposerWidget {
      *
      * Because of this, the `widgetProperties` method is now optional. If overriden, you must invoke the superclass
      * implementation to ensure that decorated properties are initialized correctly.
+     *
+     * The `@description` decorator can be applied before widget definitions and property, event or service decorators to specify
+     * the description of the decorated class member. That description will appear in the composer.
      */
     @property('NUMBER', defaultValue(200)) width: number;
 
@@ -55,28 +58,6 @@ class AGGridWebpackWidget extends TWComposerWidget {
     )
     @property('JSON', bindingSource, bindingTarget)
     data: JSON;
-
-    /**
-     * A number of aspects such as `willSet`, `didSet` and `didBind` can be used to specify various callback
-     * that will be invoked when the value of the property is bound or updated by the user through using the composer.
-     */
-    // @description('A label to display on the widget.')
-    // @property(
-    //     'STRING',
-    //     bindingTarget,
-    //     defaultValue('my value'),
-    //     willSet('valueWillSet'),
-    //     didSet('valueDidSet'),
-    // )
-    // value: string;
-
-    /**
-     * The `@description` decorator can be applied before widget definitions and property, event or service decorators to specify
-     * the description of the decorated class member. That description will appear in the composer.
-     */
-    // @description('Tracks how many times the widget was clicked')
-    // @property('NUMBER', bindingSource, nonEditable)
-    // clickedAmount: number;
 
     /**
      * Invoked to obtain the URL to this widget's icon.
@@ -135,9 +116,13 @@ class AGGridWebpackWidget extends TWComposerWidget {
      * Because of this, the `widgetServices` method is now optional. If overriden, you must invoke the superclass
      * implementation to ensure that decorated services are initialized correctly.
      */
-    @description('Prints out a message when invoked')
+    @description('Deselects all data, regardless filtering.')
     @service
-    clearRowSelection;
+    DeselectAll;
+
+    @description('Gets selected rows in TData[] format')
+    @service
+    GetSelectedRows;
 
     @description('Prints out a message when invoked')
     @service
