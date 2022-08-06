@@ -5,6 +5,7 @@ import 'ag-grid-community/styles//ag-theme-alpine.css';
 import { CheckboxRenderer } from './renderers/checkboxRenderer';
 
 export interface GridListener {
+    selectedRowChanged(data: any);
     columnMoved(column: string, toIndex: number): void;
     cellValueChanged(oldValue: any, newValue: any): void;
 }
@@ -72,6 +73,16 @@ export class TwxAgGrid {
 
             for (const listener of gridListeners) {
                 listener.columnMoved(event.columns[0].colDef.field, event.toIndex);
+            }
+        };
+
+        config.onRowSelected = function (event): void {
+            if (debugMode) {
+                console.log('AGGRID Row Selected Event');
+            }
+
+            for (const listener of gridListeners) {
+                listener.selectedRowChanged(event.data);
             }
         };
 
@@ -147,7 +158,7 @@ export class TwxAgGrid {
     }
 
     getSelectedRows(): any[] {
-        throw new Error('Method not implemented.');
+        return this.agg.gridOptions.api.getSelectedRows();
     }
 
     deselectAll(): void {

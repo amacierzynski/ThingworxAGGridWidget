@@ -37,6 +37,8 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
 
     @property DebugMode;
 
+    @property SelectedRows;
+
     @property set config(config: JSON) {
         this.twxAgGrid.initAGGrid(uid, config, this.DebugMode);
     }
@@ -55,8 +57,12 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
     }
 
     @service GetSelectedRows(): any {
-        this.twxAgGrid.getSelectedRows();
-        if (this.DebugMode) console.log(`Selected row number`);
+        const selectedRows = this.twxAgGrid.getSelectedRows();
+        this.SelectedRows = selectedRows;
+        if (this.DebugMode) {
+            console.log(`Selected row number`);
+            console.log(selectedRows);
+        }
     }
 
     /**
@@ -81,7 +87,14 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
         this.CellValueChanged();
     }
 
-    
+    @event SelectedRowChanged: TWEvent;
+
+    selectedRowChanged(data): void {
+        if (this.DebugMode) console.log(`Selected row changed to ${data}`);
+        this.SelectedRows = data;
+        this.SelectedRowChanged();
+    }
+
     /**
      * The `canBind` and `didBind` aspects can be used to specify callback methods to execute when the value of
      * the property is about to be updated or has been updated because of a binding.
@@ -126,8 +139,6 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
         // TODO: add theme as property?
         $(`.widget-aggrid-container-${uid}`).addClass('ag-theme-alpine');
     }
-
-
 
     /**
      * Invoked when this widget is destroyed. This method should be used to clean up any resources created by the widget

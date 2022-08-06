@@ -59,6 +59,10 @@ class AGGridWebpackWidget extends TWComposerWidget {
     @property('JSON', bindingSource, bindingTarget)
     data: JSON;
 
+    @description('Selected Rows')
+    @property('JSON', bindingSource, bindingTarget)
+    SelectedRows: JSON;
+
     /**
      * Invoked to obtain the URL to this widget's icon.
      * @return  The URL.
@@ -152,6 +156,10 @@ class AGGridWebpackWidget extends TWComposerWidget {
     @description('Triggered when the cell value edited by the user.')
     @event
     CellValueChanged;
+
+    @description('Triggered when new row is selected.')
+    @event
+    SelectedRowChanged;
 
     /**
      * Invoked after the widget's HTML element has been created.
