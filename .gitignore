@@ -1,0 +1,9 @@
+node_modules
+dist
+ui
+.gradle
+build
+zip
+.idea/
+.vscode/
+.env
