@@ -1,11 +1,16 @@
+import { initAGGrid } from '../common/aggridTwxWrapper';
+
 import {
     TWWidgetDefinition,
     property,
     canBind,
+    didBind,
     TWEvent,
     event,
     service,
 } from 'typescriptwebpacksupport/widgetRuntimeSupport';
+
+import './runtime.css';
 
 const uid = new Date().getTime() + '_' + Math.floor(1000 * Math.random());
 
@@ -34,7 +39,7 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
      *
      * Optionally, the decorator can receive a number of aspects as its parameters.
      */
-    // @property clickMessage: string;
+    // @property config: JSON;
 
     /**
      * The `canBind` and `didBind` aspects can be used to specify callback methods to execute when the value of
@@ -42,9 +47,10 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
      *
      * For `canBind`, the method can decide to reject the newly received value.
      */
-    // @property(canBind('valueWillBind')) set value(value: string) {
-    //     this.internalLogic.createDataElement(this.jqElement[0], value);
-    // }
+
+    @property set config(config: JSON) {
+        initAGGrid(uid, config, true);
+    }
 
     /**
      * Optionally, the first parameter of the `@property` decorator can be a string that specifies the
