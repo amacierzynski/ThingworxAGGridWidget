@@ -1,13 +1,10 @@
-import { initAGGrid } from '../common/aggridTwxWrapper';
+import { TwxAgGrid, GridListener } from '../common/aggridTwxWrapper';
 
 import {
     TWWidgetDefinition,
     property,
-    canBind,
-    didBind,
     TWEvent,
     event,
-    service,
 } from 'typescriptwebpacksupport/widgetRuntimeSupport';
 
 import './runtime.css';
@@ -19,7 +16,9 @@ const uid = new Date().getTime() + '_' + Math.floor(1000 * Math.random());
  * that inherit from the `TWRuntimeWidget` class.
  */
 @TWWidgetDefinition
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class AGGridWebpackWidget extends TWRuntimeWidget {
+    public twxAgGrid: TwxAgGrid;
     /**
      * The `@event` decorator can be applied to class member to mark them as events.
      * They must have the `TWEvent` type and can be invoked to trigger the associated event.
@@ -28,7 +27,16 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
      * the name of the event will be considered to be the same as the name of the class member.
      */
     // @event clicked: TWEvent;
+    // EVENTS
+    @event ColumnMoved: TWEvent;
 
+    // this.twxAgGrid.addListener(this);
+
+    columnMoved(column, toIndex): void {
+        // this.setProperty('Code', code);
+        console.log(`column ${column} moved to ${toIndex}`);
+        this.ColumnMoved();
+    }
     /**
      * The `@property` decorator can be applied to class member to mark them as events.
      * The value of the class member and of the associated widget property will be kept in sync.
@@ -49,7 +57,7 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
      */
 
     @property set config(config: JSON) {
-        initAGGrid(uid, config, true);
+        this.twxAgGrid.initAGGrid(uid, config, true);
     }
 
     /**
@@ -91,6 +99,8 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
      * The `jqElement` property will reference the correct element within this method.
      */
     async afterRender(): Promise<void> {
+        this.twxAgGrid = new TwxAgGrid();
+        this.twxAgGrid.addListener(this);
         // TODO: add theme as property?
         $(`.widget-aggrid-container-${uid}`).addClass('ag-theme-alpine');
         // this.internalLogic = await import('../common/internalLogic');

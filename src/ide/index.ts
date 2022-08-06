@@ -156,9 +156,9 @@ class AGGridWebpackWidget extends TWComposerWidget {
      * Because of this, the `widgetEvents` method is now optional. If overriden, you must invoke the superclass
      * implementation to ensure that decorated events are initialized correctly.
      */
-    @description('Triggered when the widget is clicked')
+    @description('Triggered when the column is manually moved by the user.')
     @event
-    clicked;
+    ColumnMoved;
 
     /**
      * Invoked after the widget's HTML element has been created.
