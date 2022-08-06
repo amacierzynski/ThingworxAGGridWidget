@@ -9,3 +9,7 @@
   height: 20px;
   display: inline-block;
 }
+
+.ag-root-wrapper-body.ag-layout-normal{
+  height: 100% !important;
+}

@@ -15,6 +15,7 @@ import {
     didSet,
 } from 'typescriptwebpacksupport/widgetIDESupport';
 
+import { TwxAgGrid } from '../common/twxAgGrid';
 import widgetIconUrl from '../images/icon.svg';
 
 /**
@@ -25,9 +26,13 @@ import widgetIconUrl from '../images/icon.svg';
  * Because of this, the `widgetProperties` method is now optional. If overriden, you must invoke the superclass
  * implementation to ensure that decorated aspects are initialized correctly.
  */
+
+const uid = new Date().getTime() + '_' + Math.floor(1000 * Math.random());
+
 @description('PSC AGGrid')
 @TWWidgetDefinition('AGGrid', autoResizable)
 class AGGridWebpackWidget extends TWComposerWidget {
+    public twxAgGrid: TwxAgGrid;
     /**
      * The `@property` decorator can be applied to class members to mark them as widget properties.
      * This must be applied with the base type of the property as its first parameter.
@@ -76,11 +81,12 @@ class AGGridWebpackWidget extends TWComposerWidget {
      * @return      The HTML structure.
      */
     renderHtml(): string {
-        return (
-            '<div class="widget-content widget-aggrid">' +
-            '<span class="aggrid-property">AGGrid</span>' +
-            '</div>'
-        );
+        const html =
+            `<div class="widget-content widget-aggrid widget-aggrid-${uid}">` +
+            `  <div class="widget-aggrid-container widget-aggrid-container-${uid}">` +
+            `  </div>` +
+            `</div>`;
+        return html;
     }
 
     /**
@@ -166,7 +172,24 @@ class AGGridWebpackWidget extends TWComposerWidget {
      * The `jqElement` property will reference the correct element within this method.
      */
     afterRender(): void {
-        // add after logic render here
+        const columnDefs = [{ field: 'make' }, { field: 'model' }, { field: 'price' }];
+
+        // specify the data
+        const rowData = [
+            { make: 'Toyota', model: 'Celica', price: 35000 },
+            { make: 'Ford', model: 'Mondeo', price: 32000 },
+            { make: 'Porsche', model: 'Boxster', price: 72000 },
+        ];
+
+        // let the grid know which columns and what data to use
+        const gridOptions = {
+            columnDefs: columnDefs,
+            rowData: rowData,
+        };
+
+        this.twxAgGrid = new TwxAgGrid();
+        this.twxAgGrid.initAGGrid(uid, gridOptions, this.DebugMode);
+        $(`.widget-aggrid-container-${uid}`).addClass('ag-theme-alpine');
     }
 
     /**
