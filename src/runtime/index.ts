@@ -19,6 +19,27 @@ const uid = new Date().getTime() + '_' + Math.floor(1000 * Math.random());
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class AGGridWebpackWidget extends TWRuntimeWidget {
     public twxAgGrid: TwxAgGrid;
+
+    /**
+     * The `@property` decorator can be applied to class member to mark them as events.
+     * The value of the class member and of the associated widget property will be kept in sync.
+     *
+     * The runtime will also automatically update the value of the property for bindings; because of this
+     * the `updateProperty` method becomes optional. If `updateProperty` is overriden, you must invoke
+     * the superclass implementation to ensure that decorated properties are updated correctly.
+     *
+     * Optionally, the decorator can receive a number of aspects as its parameters.
+     * Optionally, the first parameter of the `@property` decorator can be a string that specifies the
+     * name of the property as it is defined in the IDE class. This can be used to have different names
+     * in the definition and implementation.
+     */
+
+    @property DebugMode;
+
+    @property set config(config: JSON) {
+        this.twxAgGrid.initAGGrid(uid, config, this.DebugMode);
+    }
+
     /**
      * The `@event` decorator can be applied to class member to mark them as events.
      * They must have the `TWEvent` type and can be invoked to trigger the associated event.
@@ -26,9 +47,6 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
      * Optionally, the decorator can receive the name of the event as its parameter; if it is not specified,
      * the name of the event will be considered to be the same as the name of the class member.
      */
-    // @event clicked: TWEvent;
-    // EVENTS
-    @property DebugMode;
 
     @event ColumnMoved: TWEvent;
     columnMoved(column, toIndex): void {
@@ -42,34 +60,11 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
         this.CellValueChanged();
     }
     /**
-     * The `@property` decorator can be applied to class member to mark them as events.
-     * The value of the class member and of the associated widget property will be kept in sync.
-     *
-     * The runtime will also automatically update the value of the property for bindings; because of this
-     * the `updateProperty` method becomes optional. If `updateProperty` is overriden, you must invoke
-     * the superclass implementation to ensure that decorated properties are updated correctly.
-     *
-     * Optionally, the decorator can receive a number of aspects as its parameters.
-     */
-    // @property config: JSON;
-
-    /**
      * The `canBind` and `didBind` aspects can be used to specify callback methods to execute when the value of
      * the property is about to be updated or has been updated because of a binding.
      *
      * For `canBind`, the method can decide to reject the newly received value.
      */
-
-    @property set config(config: JSON) {
-        this.twxAgGrid.initAGGrid(uid, config, true);
-    }
-
-    /**
-     * Optionally, the first parameter of the `@property` decorator can be a string that specifies the
-     * name of the property as it is defined in the IDE class. This can be used to have different names
-     * in the definition and implementation.
-     */
-    // @property('clickedAmount') timesClicked: number;
 
     /**
      * This method is invoked whenever the `value` property is about to be updated because of a binding,
@@ -107,12 +102,6 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
         this.twxAgGrid.addListener(this);
         // TODO: add theme as property?
         $(`.widget-aggrid-container-${uid}`).addClass('ag-theme-alpine');
-        // this.internalLogic = await import('../common/internalLogic');
-        // this.jqElement[0].addEventListener('click', (event: MouseEvent): void => {
-        //     this.timesClicked++;
-        //     this.clicked();
-        //     event.stopPropagation();
-        // });
     }
 
     /**

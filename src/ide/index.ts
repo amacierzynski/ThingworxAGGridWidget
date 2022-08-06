@@ -164,6 +164,10 @@ class AGGridWebpackWidget extends TWComposerWidget {
     @event
     ColumnMoved;
 
+    @description('Triggered when the cell value edited by the user.')
+    @event
+    CellValueChanged;
+
     /**
      * Invoked after the widget's HTML element has been created.
      * The `jqElement` property will reference the correct element within this method.
