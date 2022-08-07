@@ -1,4 +1,5 @@
 import { TwxAgGrid } from '../common/twxAgGrid';
+import { GridOptions } from 'ag-grid-community';
 
 import {
     TWWidgetDefinition,
@@ -38,6 +39,12 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
     @property DebugMode;
 
     @property SelectedRows;
+
+    @property set Data(Data: TWInfotable) {
+        const config = this.getConfigFromInfoTable(Data);
+        console.log(config);
+        this.twxAgGrid.initAGGrid(uid, config, this.DebugMode);
+    }
 
     @property set config(config: JSON) {
         this.twxAgGrid.initAGGrid(uid, config, this.DebugMode);
@@ -146,5 +153,17 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
      */
     beforeDestroy?(): void {
         // add disposing logic
+    }
+
+    getConfigFromInfoTable(data: TWInfotable): GridOptions {
+        const dataShape: TWDataShape = data.dataShape;
+        const columnDefs = [];
+        Object.entries(dataShape.fieldDefinitions).forEach(([key, value]) => {
+            columnDefs.push({
+                field: value.name,
+                headerName: value.name,
+            });
+        });
+        return { columnDefs: columnDefs };
     }
 }

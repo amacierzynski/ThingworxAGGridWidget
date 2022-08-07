@@ -44,9 +44,11 @@ class AGGridWebpackWidget extends TWComposerWidget {
      * The `@description` decorator can be applied before widget definitions and property, event or service decorators to specify
      * the description of the decorated class member. That description will appear in the composer.
      */
-    @property('NUMBER', defaultValue(200)) width: number;
+    @property('NUMBER', defaultValue(200))
+    width: number;
 
-    @property('NUMBER', defaultValue(200)) height: number;
+    @property('NUMBER', defaultValue(200))
+    height: number;
 
     @description('Debug Mode for extended Console Logging.')
     @property('BOOLEAN')
@@ -58,13 +60,11 @@ class AGGridWebpackWidget extends TWComposerWidget {
     @property('JSON', bindingSource, bindingTarget)
     config: JSON;
 
-    @description(
-        'The (eventually) edited JSON object containing full configuration (data and settings)',
-    )
-    @property('JSON', bindingSource, bindingTarget)
-    data: JSON;
+    @description('The data in Infotable format')
+    @property('INFOTABLE', bindingSource, bindingTarget)
+    Data: TWInfotable;
 
-    @description('Selected Rows')
+    @description('Selected Rowsin JSON array format')
     @property('JSON', bindingSource, bindingTarget)
     SelectedRows: JSON;
 
@@ -133,21 +133,6 @@ class AGGridWebpackWidget extends TWComposerWidget {
     @description('Gets selected rows in TData[] format')
     @service
     GetSelectedRows;
-
-    @description('Prints out a message when invoked')
-    @service
-    addRow;
-
-    @description('Prints out a message when invoked')
-    @service
-    updateRow;
-
-    /**
-     * Property declarations can be mixed in with other method and event or service declarations.
-     */
-    // @description('A message to display when the widget is clicked.')
-    // @property('STRING', bindingTarget, defaultValue('Invoked via decorator'))
-    // clickMessage: string;
 
     /**
      * The event decorator defines an event.
