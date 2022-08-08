@@ -165,6 +165,14 @@ export class TwxAgGrid {
         this.agg.gridOptions.api.deselectAll();
     }
 
+    refreshCells(force: boolean, suppressFlash: boolean): void {
+        this.agg.gridOptions.api.refreshCells(force, suppressFlash);
+    }
+
+    redrawRows(): void {
+        this.agg.gridOptions.api.redrawRows();
+    }
+
     /**
      * Adds a new listener that gets called when a new code is detected by quagga
      * @param listener Listener that gets notified whenever a code is detected

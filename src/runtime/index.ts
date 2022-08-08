@@ -72,6 +72,16 @@ class AGGridWebpackWidget extends TWRuntimeWidget {
         }
     }
 
+    @service RefreshCells(): void {
+        if (this.DebugMode) console.log(`All data refreshed.`);
+        this.twxAgGrid.refreshCells(true, true);
+    }
+
+    @service RedrawRows(): void {
+        if (this.DebugMode) console.log(`All data redrawn.`);
+        this.twxAgGrid.redrawRos();
+    }
+
     /**
      * The `@event` decorator can be applied to class member to mark them as events.
      * They must have the `TWEvent` type and can be invoked to trigger the associated event.

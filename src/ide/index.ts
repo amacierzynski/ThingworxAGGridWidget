@@ -135,6 +135,24 @@ class AGGridWebpackWidget extends TWComposerWidget {
     GetSelectedRows;
 
     /**
+     * https://www.ag-grid.com/javascript-data-grid/view-refresh/#refresh-cells
+     */
+    @description(
+        'Performs change detection on all cells, refreshing cells where required. \
+        Skips change detection, refreshes everything. \
+        Skill cell flashing, if cell flashing is enebled.',
+    )
+    @service
+    RefreshCells;
+
+    /**
+     * https://www.ag-grid.com/javascript-data-grid/view-refresh/#redraw-rows
+     */
+    @description('Remove rows from the DOM and recreate them again from scratch.')
+    @service
+    RedrawRows;
+
+    /**
      * The event decorator defines an event.
      *
      * Because of this, the `widgetEvents` method is now optional. If overriden, you must invoke the superclass
